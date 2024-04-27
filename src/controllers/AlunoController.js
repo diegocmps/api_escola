@@ -62,6 +62,16 @@ class AlunoController {
                 return res.status(400).json({ message: "Insira um número de celular válido." })
             }
 
+            const alunoExistente = Aluno.findOne({
+                where: {
+                    email: email
+                }
+            })
+
+            if(alunoExistente){
+                return res.status(409).json({message: "Aluno já cadastrado."})
+            }
+
             const aluno = await Aluno.create({
                 email: email,
                 password: password,
