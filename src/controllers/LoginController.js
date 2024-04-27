@@ -1,5 +1,6 @@
 const { sign } = require("jsonwebtoken")
 const Aluno = require("../models/Aluno")
+const { compare } = require("bcryptjs")
 
 sign
 
@@ -24,13 +25,18 @@ class LoginController {
             // Procura na tabela Aluno um aluno que corresponda com o email e senha fornecidos
             const aluno = await Aluno.findOne({
                 where: {
-                    email:email,
-                    password:password
+                    email:email
                 }
             })
     
             if(!aluno){
                 return res.status(404).json({ message: "Não existe aluno com email e senha informado!" })
+            }
+
+            const hashSenha = await compare(password, aluno.password)
+
+            if(hashSenha === false){
+                return res.status(403).json({ message: "Email e senha informados estão incorretos." })
             }
     
             const payload = {sub: aluno.id, email: aluno.email, nome: aluno.nome}

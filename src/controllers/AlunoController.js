@@ -62,7 +62,7 @@ class AlunoController {
                 return res.status(400).json({ message: "Insira um número de celular válido." })
             }
 
-            const alunoExistente = Aluno.findOne({
+            const alunoExistente = await Aluno.findOne({
                 where: {
                     email: email
                 }
